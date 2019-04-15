@@ -117,3 +117,11 @@ La idea es que cuando se le haga el mantenimiento a un vehículo, se debe almace
 Cuando se envía la mercancía, se genera un número de guía que identifica cada despacho, se debe almacenar: peso real, ancho, largo y alto del paquete en centímetros, peso volumen (se obtiene multiplicando el ancho x el alto x el largo y luego se multiplica por 400 que es el factor de equivalencia por cada metro cúbico), tipo de servicio (carga aérea, mercancía, mensajería, firma de documentos, radicación de documentos), nombre, cédula o NIT, teléfono y dirección (tanto del remitente como del destinatario), fecha y hora del despacho, fecha y hora de la entrega, observaciones, ciudad origen, ciudad destino, código postal origen, código postal destino, unidades, flete fijo, flete variable, otros valores, valor del servicio, estado.
 
 Cada guía es posible rastrearla, por eso se debe almacenar los diferentes estados que ha tenido, los posibles estados son: A recibir, en terminal origen, en transporte, en terminal destino, en reparto, entregada. También se debe almacenar la fecha y la hora en la cual se crea un nuevo estado.
+
+---
+### Observaciones
+
+* Debe usarse la opción "Default value" en aquellas columnas que tengan valores por defecto.
+* _Mi recomendación personal_ es que cuando las tablas queden con 2 columnas o 1 columna sin contar la clave primaria, es posible desnormalizar siempre y cuando en la tabla que vaya a contener esa columna, tenga una restricción de tipo CHECK que solo acepte los valores requeridos https://www.techonthenet.com/oracle/check.php
+* No olvidar las buenas prácticas para el nombramiento de las cosas, tablas en plural, todas las tablas con una columna ID de tipo entero. Claves foráneas bien nombradas, entre otros.
+* Si la tabla se llama "CLIENTES", no es necesario que las columnas tengan algún sufijo que relacione la tabla, tales como: teléfono_cliente, nombre_cliente, apellido_cliente. Ya se asume que estos campos son de un cliente en específico. Si la columna no coincide con lo referido en la tabla, es probable que se encuentre en la tabla incorrecta o el modelo se encuentre mal normalizado.
