@@ -52,7 +52,7 @@ Para los empleados se desea almacenar la siguiente información: nombre del empl
 
 Coordinadora tiene el inventario de sus vehículos, la información que se almacena de cada vehículo es: marca, modelo, línea, tipo de combustible (diesel, gasolina), kilometraje, capacidad (2.5 TON, 2.8 TON, 3.3 TON, 3.5 TON, 5 TON, 6 TON, 11 TON y 700Kg). Cada vehículo está asociado a una terminal de carga.
 
-Las directivas han decidido utilizar la base de datos para llevar el control y los planes de mantenimiento de los vehículos, este plan de mantenimiento se realiza por kilometraje y va de la siguiente manera: 
+Las directivas han decidido utilizar la base de datos para llevar el control y los planes de mantenimiento de los vehículos, este plan de mantenimiento se realiza por kilometraje y va de la siguiente manera, es decir; cada plan de mantenimiento tiene varios items o varios elementos a ser revisados. El modelo debe ser lo suficientemente dinámico para soportar nuevos planes que sean necesarios, los siguientes son unos posibles ejemplos de escenarios que podrían presentarse:
 
 * Cada 5.000 Kilómetros:
     - Cambiar el aceite y el filtro del mismo y el del aire
@@ -97,7 +97,22 @@ Las directivas han decidido utilizar la base de datos para llevar el control y l
     - Sustituir el líquido refrigerante, de radiador, aceite y su filtro.
     - Realizar peritaje especializado para prevención de fallas.
 
-La idea es que cuando se le haga el mantenimiento a un vehículo, se debe almacenar: fecha del mantenimiento, hora de entrada, hora de salida, empleado encargado. Posteriormente se deben relacionar las revisiones hechas de acuerdo al plan de mantenimiento, para cada una deberá guardarse el estado (por defecto tendrá "No realizado") y una columna de observaciones. Así, cuando se realice el mantenimiento, esta información será enviada a la base de datos.
+La idea es que cuando se le haga el mantenimiento a un vehículo, se debe almacenar: fecha del mantenimiento, hora de entrada, hora de salida, empleado encargado. Cuando se realiza el mantenimiento a un vehículo, se debe asociar con el plan de mantenimiento requerido. Posteriormente se deben relacionar las revisiones hechas de acuerdo al plan de mantenimiento (Alineación, Sincronización, Ajuste Suspensión), para cada una deberá guardarse el estado *(por defecto tendrá "No realizado")* y una columna de observaciones. Así, cuando se realice el mantenimiento, esta información será enviada a la base de datos. Ejemplo:
+
+| Vehículo | Fecha Mantenimiento | Estado  | Empleado Encargado | Mantenimiento |
+| ------------- |:-------------:| :-----:| :----: | :---: |
+| RGH-345 | **Abril/25/2019** | Realizado | Andres Martinez | Revisión 5000 km |
+
+*Detalle*
+
+| Revisión | Estado | Observaciones |
+|--------|:----:|:---:|
+| Cambio aceite | Realizado ||
+| Cambio Filtro aceite | Realizado ||
+| Cambio Filtro Aire | Pendiente ||
+| Revisión presión llantas | Pendiente ||
+| Revisión Banda Rodamiento | Realizado | Se realiza cambio de la banda por desgaste prematuro |
+
 
 Cuando se envía la mercancía, se genera un número de guía que identifica cada despacho, se debe almacenar: peso real, ancho, largo y alto del paquete en centímetros, peso volumen (se obtiene multiplicando el ancho x el alto x el largo y luego se multiplica por 400 que es el factor de equivalencia por cada metro cúbico), tipo de servicio (carga aérea, mercancía, mensajería, firma de documentos, radicación de documentos), nombre, cédula o NIT, teléfono y dirección (tanto del remitente como del destinatario), fecha y hora del despacho, fecha y hora de la entrega, observaciones, ciudad origen, ciudad destino, código postal origen, código postal destino, unidades, flete fijo, flete variable, otros valores, valor del servicio, estado.
 
