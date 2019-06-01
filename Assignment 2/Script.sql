@@ -84,6 +84,107 @@ CREATE TABLE COTIZADOR_PRECIOS (
     CONSTRAINT FK_CIUDADES_DESTINO_COTIZADOR FOREIGN KEY (DESTINO_ID) REFERENCES CIUDADES(ID)
 );
 
+-- 7 
+-- Crear una función que retornará un decimal, dicha función recibirá las siguientes variables:
+-- peso_real, peso_volumen, centro_recibo_origen, ciudad_destino. 
+-- Dicha función deberá comparar el valor mayor entre peso_real y peso_volumen,
+-- con ese valor deberá buscar el precio por kilo de la ciudad hacia donde se dirige el paquete. 
+-- Para esto invocará la vista del punto anterior y el precio deberá multiplicarlo 
+-- Validar con excepciones que los pesos sean mayores a 0 y los centros de
+-- recibo y la ciudad destino no estén en blanco.
+
+CREATE OR REPLACE FUNCTION funcionDecimal (peso_real integer, peso_volumen integer,
+                                           centro_recibo_origen integer, ciudad_destino integer) RETURN INTEGER IS
+resultado integer :=0;
+mayor integer  := 0;
+precio_total integer  := 0;
+bandera_pesos integer := 0;
+begin
+
+        IF(peso_real and peso_volumen > 0) then
+        bandera_pesos := 1;
+        else
+        DBMS_OUTPUT.put_line('los pesos no son validos');
+        end if;
+        
+        
+            if (peso_real > peso_volumen and bandera_pesos = 1) THEN
+            mayor := peso_real;
+            else if(peso_volumen > peso_real  and bandera_pesos = 1) then
+            mayor := peso_volumen;
+            else 
+            mayor:= peso_real;
+            end if;
+       
+        
+        
+     --   precio_kilo := valor de la vista where ID_CIUDAD_DESTINO = (select id_ciudad from ciudades)
+     
+        IF(precio_kilo = 0 or precio_kilo = null ) then
+        DBMS_OUTPUT.put_line('los centros de recibo o la ciudad destino en blanco');
+        end if;
+     
+     
+        precio_total := precio_kilo * mayor;
+        
+        
+        
+    RETURN precio_total;
+end
+
+-- 8
+
+-- Crear un procedimiento llamado "calcular_fletes",
+-- el cual seleccionará aquellos envíos donde el campo "valor del servicio" esté 0 o nullo. 
+-- Con cada uno de ellos deberá invocar la función creada en el punto anterior y con el valor retornado,
+-- deberá llenar el campo "valor del servicio".
+
+CREATE OR REPLACE PROCEDURE calcular_fletes AS
+
+
+     cursor cur is
+     SELECT peso_real, peso_volumen, centro_recibo_origen, ciudad_destino
+     FROM envio_mercancia
+     where valor_servicio = null or valor_servicio = 0
+     FOR UPDATE;
+     
+        resultado_function INTEGER;
+     
+BEGIN
+
+   FOR dato in cur
+   LOOP
+      resultado_function  := funcionDecimal(dato.peso_real, dato.peso_volumen, dato.centro_recibo_origen, dato.ciudad_destino);
+      UPDATE envio_mercancia set valor_servicio = resultado_function WHERE CURRENT OF cur; 
+   END LOOP;
+END;
+
+-- 9
+-- Crear un procedimiento llamado "calcular_peso_volumetrico",
+-- dicho procedimiento deberá leer todos los registros de la tabla de envíos y llenar el 
+-- campo "peso volumen", para esto aplicará la fórmula expuesta en el taller anterior: 
+-- se obtiene multiplicando el ancho x el alto x el largo
+-- y luego se multiplica por 400 que es el factor de equivalencia por cada metro cúbico)
+
+CREATE OR REPLACE PROCEDURE calcular_peso_volumetrico AS
+
+     cursor cur is
+     SELECT ancho,largo,alto
+     FROM envio_mercancia
+     FOR UPDATE;
+     
+     resultado_function INTEGER;
+     
+BEGIN
+
+   FOR dato in cur
+   LOOP
+      resultado_function  := dato.ancho*dato.largo*dato.alto*400;
+      UPDATE envio_mercancia set peso_volumen = resultado_function WHERE CURRENT OF cur; 
+   END LOOP;
+END;
+
+
 
 --10. calcular cajas necesarias
 DECLARE 
