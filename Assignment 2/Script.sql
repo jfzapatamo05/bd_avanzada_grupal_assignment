@@ -149,10 +149,34 @@ return precio_kilo;
 
 END;
 
+-- 7
+-- Crear un procedimiento llamado "calcular_peso_volumetrico",
+-- dicho procedimiento deberá leer todos los registros de la tabla de envíos y llenar el 
+-- campo "peso volumen", para esto aplicará la fórmula expuesta en el taller anterior: 
+-- se obtiene multiplicando el ancho x el alto x el largo
+-- y luego se multiplica por 400 que es el factor de equivalencia por cada metro cúbico)
+
+CREATE OR REPLACE PROCEDURE calcular_peso_volumetrico AS
+
+     cursor cur is
+     SELECT ancho,largo,alto
+     FROM envio_mercancia
+     FOR UPDATE;
+     
+     resultado_function INTEGER;
+     
+BEGIN
+
+   FOR dato in cur
+   LOOP
+      resultado_function  := dato.ancho*dato.largo*dato.alto*400;
+      UPDATE envio_mercancia set peso_volumen = resultado_function WHERE CURRENT OF cur; 
+   END LOOP;
+END;
 
 
 
--- 7 
+-- 8
 -- Crear una función que retornará un decimal, dicha función recibirá las siguientes variables:
 -- peso_real, peso_volumen, centro_recibo_origen, ciudad_destino. 
 -- Dicha función deberá comparar el valor mayor entre peso_real y peso_volumen,
@@ -200,6 +224,9 @@ begin
     RETURN precio_total;
 end;
 
+
+
+
 -- 8
 
 -- Crear un procedimiento llamado "calcular_fletes",
@@ -227,30 +254,6 @@ BEGIN
    END LOOP;
 END;
 
--- 9
--- Crear un procedimiento llamado "calcular_peso_volumetrico",
--- dicho procedimiento deberá leer todos los registros de la tabla de envíos y llenar el 
--- campo "peso volumen", para esto aplicará la fórmula expuesta en el taller anterior: 
--- se obtiene multiplicando el ancho x el alto x el largo
--- y luego se multiplica por 400 que es el factor de equivalencia por cada metro cúbico)
-
-CREATE OR REPLACE PROCEDURE calcular_peso_volumetrico AS
-
-     cursor cur is
-     SELECT ancho,largo,alto
-     FROM envio_mercancia
-     FOR UPDATE;
-     
-     resultado_function INTEGER;
-     
-BEGIN
-
-   FOR dato in cur
-   LOOP
-      resultado_function  := dato.ancho*dato.largo*dato.alto*400;
-      UPDATE envio_mercancia set peso_volumen = resultado_function WHERE CURRENT OF cur; 
-   END LOOP;
-END;
 
 
 
