@@ -74,15 +74,51 @@ UPDATE VEHICULOS SET KILOMETRAJE= 99976 WHERE ID=20;
 
 SELECT * FROM MANTENIMIENTOS;
 
---5. la junta directiva desea realizar un cotizador de precios de los envíos
+--5. la junta directiva desea realizar un cotizador de precios de los envÃ­os...
+
 CREATE TABLE COTIZADOR_PRECIOS (
-	ID INTEGER PRIMARY KEY,
-	CENTRO_RECIB_ID INT,
+    ID INTEGER PRIMARY KEY,
+    CENTRO_RECIB_ID INT,
     DESTINO_ID INT,
     PRECIO_KILO DECIMAL,
     CONSTRAINT FK_CENTRO_RECIB_COTIZADOR FOREIGN KEY (CENTRO_RECIB_ID) REFERENCES CENTRO_RECIBOS (ID),
     CONSTRAINT FK_CIUDADES_DESTINO_COTIZADOR FOREIGN KEY (DESTINO_ID) REFERENCES CIUDADES(ID)
 );
+=======
+--Borrar todos los datos de la tabla donde se guardan los precios.
+--Leer todos los centros de recibo y empezar a recorrerlos uno a uno.
+--Por cada centro de recibo deberá leer todas las ciudades o códigos postales.
+--Deberá generar un decimal aleatorio entre 400 y 1500
+--Luego insertará en la tabla el id del centro de recibo, el id de la ciudad o del código postal y el valor generado.
+
+CREATE OR REPLACE PROCEDURE RECALCULAR_TARIFAS AS
+
+CURSOR CURSOR_CENTRO_RECIBOS IS
+    SELECT CR.ID AS CENTRO_RECIBO_ID,CI.ID AS CIUDAD_ID
+    FROM CENTRO_RECIBOS CR INNER JOIN CIUDADES CI
+    ON CR.ID_CIUDAD = CI.ID;
+    IDCENTRORECIBO INT;
+    IDCIUDADDESTINO INT;
+    IDCOTIZADOR INT := 1;
+    PRECIO_KILO DECIMAL := 0;
+    
+  BEGIN  
+    DELETE FROM COTIZADOR_PRECIOS;
+
+    OPEN CURSOR_CENTRO_RECIBOS;
+    FETCH CURSOR_CENTRO_RECIBOS INTO IDCENTRORECIBO,IDCIUDADDESTINO;    
+    WHILE CURSOR_CENTRO_RECIBOS % FOUND LOOP
+    PRECIO_KILO := dbms_random.value(400, 1500);
+    INSERT INTO COTIZADOR_PRECIOS (ID,CENTRO_RECIB_ID,DESTINO_ID,PRECIO_KILO) VALUES (IDCOTIZADOR,IDCENTRORECIBO,IDCIUDADDESTINO,PRECIO_KILO);
+    FETCH CURSOR_CENTRO_RECIBOS INTO IDCENTRORECIBO,IDCIUDADDESTINO;
+    IDCOTIZADOR := IDCOTIZADOR+1;
+    END LOOP;
+    CLOSE CURSOR_CENTRO_RECIBOS;
+END;
+
+execute RECALCULAR_TARIFAS;
+
+SELECT * FROM COTIZADOR_PRECIOS;
 
 -- 6
 
@@ -155,7 +191,7 @@ begin
         
         
     RETURN precio_total;
-end
+end;
 
 -- 8
 
