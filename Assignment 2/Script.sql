@@ -84,6 +84,31 @@ CREATE TABLE COTIZADOR_PRECIOS (
     CONSTRAINT FK_CIUDADES_DESTINO_COTIZADOR FOREIGN KEY (DESTINO_ID) REFERENCES CIUDADES(ID)
 );
 
+-- 6
+
+
+CREATE OR REPLACE function vista_seis (destino integer, centro_recibo integer) return integer AS
+
+precio_kilo integer;   
+          
+BEGIN
+  
+  -- CREATE OR REPLACE VIEW QUERY_2_VIEW AS 
+  -- SELECT  "precio_kilo" 
+  -- FROM "C##AMARTINEZG"."nueva_tabla"  
+  -- where "destino_id"  = destino and "centro_recib_id " = centro_recibo;
+    
+SELECT  "precio_kilo" INTO precio_kilo 
+ FROM "C##AMARTINEZG"."nueva_tabla"  
+ where "destino_id"  = destino and "centro_recib_id " = centro_recibo;
+
+return precio_kilo;
+
+END;
+
+
+
+
 -- 7 
 -- Crear una función que retornará un decimal, dicha función recibirá las siguientes variables:
 -- peso_real, peso_volumen, centro_recibo_origen, ciudad_destino. 
@@ -117,7 +142,7 @@ begin
             end if;
        
         
-        
+        precio_kilo :=   vista_seis(ciudad_destino,centro_recibo_origen);
      --   precio_kilo := valor de la vista where ID_CIUDAD_DESTINO = (select id_ciudad from ciudades)
      
         IF(precio_kilo = 0 or precio_kilo = null ) then
