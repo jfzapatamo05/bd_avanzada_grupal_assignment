@@ -1,0 +1,38 @@
+Assignment 2
+
+https://github.com/jfzapatamo05/bd_avanzada_grupal_assignment/tree/master/Assignment%202
+
+1. Crear datos para la solución de problemas (0.3): 0.0
+	- En el repositorio no está el export y tampoco hay una carpeta de datos RECIENTE donde muestre los datos, como tampoco están los videos en un formato que pueda ejecutar, no tengo manera de validar este punto.
+2. Vista llamada "plan_mantenimiento_detallado" (0.3): 0.3
+3. Procedimiento almacenado llamado "Programar_mantenimiento" (0.5): 0.2
+	- Validación 200km: OK
+	- Programación fecha 2 días después: OK
+	- Excepciones si id es menor a 0: OK
+	- Está lógica tiene un fallo grande, si un carro al momento de actualizar el kilometraje da por ejemplo 10.001, no va a programar el mantenimiento de 10.000 km y menos el de siguiente. Por esta validación V_KILOMETROS > 5000 AND V_KILOMETROS <= 10000.
+	- Saben que cosas pienso con este montón de condicionales anidados, si bien puede funcionar, es una mala práctica.
+	- No se insertan los detalles de cada mantenimiento en estado pendiente. No hay ningún query a "operaciones_revisiones".
+4. Trigger que llame "Programar_mantenimiento" (0.1): 0.1
+	- Este trigger debe lanzar error, ya que dentro del procedimiento PROGRAMAR_MANTENIMIENTO están haciendo una lectura a la tabla vehículos, lo cuál debe sacar un error de mutación, cómo lo están manejando?
+5. Creación tabla precios con columnas centro_recibo_id, destino_id, precio_kilo (0.3): 0.1
+	- Procedimiento "recalcular_tarifas"
+		- Borrar datos de la tabla: OK
+		- Cursores anidados: NO, este cursor CURSOR_CENTRO_RECIBOS solo está trayendo la ciudad de donde es el centro de recibo, es decir si hay 10 centros de recibo solo está insertando 10 precios. Lo cual no es correcto.
+		- Precio aleatorio
+6. Creación vista para obtener precios entre ciudades origen y destino (0.3): 0.0
+	- Una vista no retorna datos; esto debe generar error de compilación.
+7. Procedimiento "calcular_peso_volumetrico" para llenar columna "peso volumen" en la tabla envíos. (0.3): 0.3
+	- ancho x el alto x el largo x 400
+8. Función para cotizar envío recibiendo peso_real, peso_volumen, centro_recibo_origen, ciudad_destino (0.3): 0.3
+	- Excepciones pesos mayores a 0
+	- Centros de recibo y ciudad destino no estén en blanco.
+	- La función debería recibir parámetros decimales.
+9. Procedimiento "calcular_fletes" donde la columna "valor_servicio" esté nula y llenar el valor para todos los registros (0.3): 0.3
+10. Función CALCULAR_CAJAS_NECESARIAS (0.3): 0.3
+11. Backup (0.5): 0.5
+12. Artículo Netflix: What Happens When You Press Play? (0.5): 0.5
+13. Video (1.0): 0.0
+	- Calidad audio y sonido. (0.3)
+	- Ejecución y explicación de funciones. (0.7)
+
+Nota: 0.0+0.3+0.2+0.1+0.1+0.0+0.3+0.3+0.3+0.3+0.5+0.5+0.0 = 2.9
